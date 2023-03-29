@@ -1,6 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setCoursesOnline } from "../../app/slices/courseOnlineSlices"
 
 function OnlineCourse() {
+
+  const coursesOnlines = useSelector(state => state.couresOnline);
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    getCoursesOnline();
+  }, []);
+
+  const courseType = "online";
+
+
+  const getCoursesOnline = async () => {
+    try {
+      const rs = await axios.get(`http://localhost:8080/api/v1/courses?type=${courseType}`);
+      dispatch(setCoursesOnline(rs.data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
   return (
     <div class="course-container mt-5">
       <div class="container">
@@ -49,168 +76,38 @@ function OnlineCourse() {
               </div>
             </div>
             <div class="course-list row">
+
+                {coursesOnlines.length > 0 && coursesOnlines.map((coursesOnline) => (
+
+                
               <div class="col-md-4">
-                <a href="./detail.html">
+                <Link to={`/khoa-hoc/${coursesOnline.id}`}>
                   <div class="course-item shadow-sm rounded mb-4">
                     <div class="course-item-image">
                       <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
+                        src={coursesOnline.thumbnail ? coursesOnline.thumbnail : "https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"}
                         alt="Marge Innastraightline"
                       />
                     </div>
                     <div class="course-item-info p-3">
                       <h2 class="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
+                        {coursesOnline.name}
                       </h2>
                       <div class="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p class="type">Trực tuyến</p>
+                        <p class="type">{coursesOnline.type}</p>
                         <p class="rating">
-                          <span>3</span>
+                          <span>{coursesOnline.rating}</span>
                           <span class="text-warning">
                             <i class="fa-solid fa-star"></i>
                           </span>
                         </p>
                       </div>
-                      <p class="price text-danger fs-5">3.000.000 VND</p>
+                      <p class="price text-danger fs-5">{coursesOnline.price} VND</p>
                     </div>
                   </div>
-                </a>
+                </Link>
               </div>
-              <div class="col-md-4">
-                <a href="./detail.html">
-                  <div class="course-item shadow-sm rounded mb-4">
-                    <div class="course-item-image">
-                      <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
-                        alt="Marge Innastraightline"
-                      />
-                    </div>
-                    <div class="course-item-info p-3">
-                      <h2 class="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
-                      </h2>
-                      <div class="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p class="type">Trực tuyến</p>
-                        <p class="rating">
-                          <span>3</span>
-                          <span class="text-warning">
-                            <i class="fa-solid fa-star"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <p class="price text-danger fs-5">3.000.000 VND</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div class="col-md-4">
-                <a href="./detail.html">
-                  <div class="course-item shadow-sm rounded mb-4">
-                    <div class="course-item-image">
-                      <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
-                        alt="Marge Innastraightline"
-                      />
-                    </div>
-                    <div class="course-item-info p-3">
-                      <h2 class="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
-                      </h2>
-                      <div class="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p class="type">Trực tuyến</p>
-                        <p class="rating">
-                          <span>3</span>
-                          <span class="text-warning">
-                            <i class="fa-solid fa-star"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <p class="price text-danger fs-5">3.000.000 VND</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div class="col-md-4">
-                <a href="./detail.html">
-                  <div class="course-item shadow-sm rounded mb-4">
-                    <div class="course-item-image">
-                      <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
-                        alt="Marge Innastraightline"
-                      />
-                    </div>
-                    <div class="course-item-info p-3">
-                      <h2 class="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
-                      </h2>
-                      <div class="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p class="type">Trực tuyến</p>
-                        <p class="rating">
-                          <span>3</span>
-                          <span class="text-warning">
-                            <i class="fa-solid fa-star"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <p class="price text-danger fs-5">3.000.000 VND</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div class="col-md-4">
-                <a href="./detail.html">
-                  <div class="course-item shadow-sm rounded mb-4">
-                    <div class="course-item-image">
-                      <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
-                        alt="Marge Innastraightline"
-                      />
-                    </div>
-                    <div class="course-item-info p-3">
-                      <h2 class="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
-                      </h2>
-                      <div class="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p class="type">Trực tuyến</p>
-                        <p class="rating">
-                          <span>3</span>
-                          <span class="text-warning">
-                            <i class="fa-solid fa-star"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <p class="price text-danger fs-5">3.000.000 VND</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div class="col-md-4">
-                <a href="./detail.html">
-                  <div class="course-item shadow-sm rounded mb-4">
-                    <div class="course-item-image">
-                      <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
-                        alt="Marge Innastraightline"
-                      />
-                    </div>
-                    <div class="course-item-info p-3">
-                      <h2 class="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
-                      </h2>
-                      <div class="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p class="type">Trực tuyến</p>
-                        <p class="rating">
-                          <span>3</span>
-                          <span class="text-warning">
-                            <i class="fa-solid fa-star"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <p class="price text-danger fs-5">3.000.000 VND</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
+              ))}
             </div>
           </div>
         </div>

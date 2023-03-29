@@ -15,7 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class AdminService {
@@ -51,8 +53,7 @@ public class AdminService {
         });
 
         // lấy ra category
-        List<Integer> topicIds = request.getTopics();
-        List<Category> categoryList = categoryRepository.findCategoriesById(topicIds.get(0), topicIds.get(1), topicIds.get(2));
+        List<Category> categoryList = getCategory(request.getTopics());
 
         // tạo mới course
         Course course = Course.builder()
@@ -93,8 +94,7 @@ public class AdminService {
 
 
         // lấy ra list Category
-        List<Integer> topicIds = request.getTopics();
-        List<Category> categoryList = categoryRepository.findCategoriesById(topicIds.get(0), topicIds.get(1), topicIds.get(2));
+        List<Category> categoryList = getCategory(request.getTopics());
 
         // set lại dữ liệu
         course.setName(request.getName());
@@ -118,5 +118,25 @@ public class AdminService {
         });
 
         courseRepository.deleteById(course.getId());
+
+    }
+
+
+
+
+    // lấy ngẫu nhiên Category
+    private List<Category> getCategory(int number) {
+        List<Category> categoryList = categoryRepository.findAll();
+        Random rd = new Random();
+        List<Category> rdCategories = new ArrayList<>();
+        for (int i = 0; i < number; i++) {
+            Category rdct = categoryList.get(rd.nextInt(categoryList.size()));
+            if (!rdCategories.contains(rdct)) {
+                rdCategories.add(rdct);
+            }
+        }
+
+        return rdCategories;
+
     }
 }

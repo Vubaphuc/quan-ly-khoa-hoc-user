@@ -1,8 +1,9 @@
 package com.example.coursebackend.controller;
 
-import com.example.coursemanagementjpa.dto.CourseDto;
-import com.example.coursemanagementjpa.entity.Course;
-import com.example.coursemanagementjpa.service.UserService;
+
+import com.example.coursebackend.dto.CourseDto;
+import com.example.coursebackend.entity.Course;
+import com.example.coursebackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setCourses } from "../../app/slices/courseSlices";
+
 
 function ListCourse() {
+
+    const courses = useSelector((state) => state.courseList);
+    const dispatch = useDispatch();
+
+    // const [courses, setCourses] = useState([]);
+
+
+    useEffect (() => {
+        getCourses();
+    },[]) 
+
+
+    const getCourses = async () => {
+        try {
+            const rs = await axios.get("http://localhost:8080/api/v1/courses");
+            console.log(rs.data)
+            dispatch(setCourses(rs.data))
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    
+
+
+
   return (
     <div className="course-container mt-5">
       <div className="container">
@@ -49,168 +80,38 @@ function ListCourse() {
               </div>
             </div>
             <div className="course-list row">
-              <div className="col-md-4">
-                <a href="./detail.html">
+                {courses.length > 0 &&
+                courses.map((course) => (
+
+                
+              <div className="col-md-4" key={course.id}>
+                <Link to={`/khoa-hoc/${course.id}`}>
                   <div className="course-item shadow-sm rounded mb-4">
                     <div className="course-item-image">
                       <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
+                        src={course.thumbnail ? course.thumbnail : "https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"}
                         alt="Marge Innastraightline"
                       />
                     </div>
                     <div className="course-item-info p-3">
                       <h2 className="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
+                        {course.name}
                       </h2>
                       <div className="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p className="type">Trực tuyến</p>
+                        <p className="type">{course.type}</p>
                         <p className="rating">
-                          <span>3</span>
+                          <span>{course.rating}</span>
                           <span className="text-warning">
                             <i className="fa-solid fa-star"></i>
                           </span>
                         </p>
                       </div>
-                      <p className="price text-danger fs-5">3.000.000 VND</p>
+                      <p className="price text-danger fs-5">{course.price} VND</p>
                     </div>
                   </div>
-                </a>
+                </Link>
               </div>
-              <div className="col-md-4">
-                <a href="./detail.html">
-                  <div className="course-item shadow-sm rounded mb-4">
-                    <div className="course-item-image">
-                      <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
-                        alt="Marge Innastraightline"
-                      />
-                    </div>
-                    <div className="course-item-info p-3">
-                      <h2 className="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
-                      </h2>
-                      <div className="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p className="type">Phòng Lab</p>
-                        <p className="rating">
-                          <span>3</span>
-                          <span className="text-warning">
-                            <i className="fa-solid fa-star"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <p className="price text-danger fs-5">3.000.000 VND</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div className="col-md-4">
-                <a href="./detail.html">
-                  <div className="course-item shadow-sm rounded mb-4">
-                    <div className="course-item-image">
-                      <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
-                        alt="Marge Innastraightline"
-                      />
-                    </div>
-                    <div className="course-item-info p-3">
-                      <h2 className="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
-                      </h2>
-                      <div className="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p className="type">Phòng Lab</p>
-                        <p className="rating">
-                          <span>3</span>
-                          <span className="text-warning">
-                            <i className="fa-solid fa-star"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <p className="price text-danger fs-5">3.000.000 VND</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div className="col-md-4">
-                <a href="./detail.html">
-                  <div className="course-item shadow-sm rounded mb-4">
-                    <div className="course-item-image">
-                      <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
-                        alt="Marge Innastraightline"
-                      />
-                    </div>
-                    <div className="course-item-info p-3">
-                      <h2 className="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
-                      </h2>
-                      <div className="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p className="type">Trực tuyến</p>
-                        <p className="rating">
-                          <span>3</span>
-                          <span className="text-warning">
-                            <i className="fa-solid fa-star"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <p className="price text-danger fs-5">3.000.000 VND</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div className="col-md-4">
-                <a href="./detail.html">
-                  <div className="course-item shadow-sm rounded mb-4">
-                    <div className="course-item-image">
-                      <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
-                        alt="Marge Innastraightline"
-                      />
-                    </div>
-                    <div className="course-item-info p-3">
-                      <h2 className="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
-                      </h2>
-                      <div className="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p className="type">Phòng Lab</p>
-                        <p className="rating">
-                          <span>3</span>
-                          <span className="text-warning">
-                            <i className="fa-solid fa-star"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <p className="price text-danger fs-5">3.000.000 VND</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div className="col-md-4">
-                <a href="./detail.html">
-                  <div className="course-item shadow-sm rounded mb-4">
-                    <div className="course-item-image">
-                      <img
-                        src="https://media.techmaster.vn/api/static/8028/bpfneoc51co8tcg6lek0"
-                        alt="Marge Innastraightline"
-                      />
-                    </div>
-                    <div className="course-item-info p-3">
-                      <h2 className="fs-5 mb-4 text-dark">
-                        Spring Boot - Web Back End
-                      </h2>
-                      <div className="d-flex justify-content-between align-items-center fw-light text-black-50">
-                        <p className="type">Trực tuyến</p>
-                        <p className="rating">
-                          <span>3</span>
-                          <span className="text-warning">
-                            <i className="fa-solid fa-star"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <p className="price text-danger fs-5">3.000.000 VND</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
+              ))}
             </div>
           </div>
         </div>

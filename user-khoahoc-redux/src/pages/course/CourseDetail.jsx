@@ -1,17 +1,52 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { setCourse, setUser } from "../../app/slices/courseDetailSlices"
 
 function CourseDetail() {
+
+    let { courseId } = useParams();
+
+    const dispatch = useDispatch();
+    const course = useSelector(state => state.courseDetail.course);
+    const user = useSelector(state => state.courseDetail.user);
+
+
+
+    useEffect(() => {
+        getCourse();
+    }, []);
+
+    const getCourse = async () => {
+        try {
+            const rs = await axios.get(`http://localhost:8080/api/v1/courses/${courseId}`);
+            console.log(rs.data.user)
+            
+            dispatch(setCourse(rs.data));
+            dispatch(setUser(rs.data.user));
+            
+        
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
   return (
+    
     <div className="course-container mt-5">
       <div className="container">
         <div className="mb-4">
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <Link to={"/khoa-hoc"}>Khóa học</Link>
+                <Link to={"/khoa-hoc"}>
+                    Khóa Học
+                </Link>
               </li>
               <li className="breadcrumb-item active" aria-current="page">
-                Spring Boot - Web Back End
+                {course.name}
               </li>
             </ol>
           </nav>
@@ -19,7 +54,7 @@ function CourseDetail() {
         <div className="row justify-content-center">
           <div className="col-md-8">
             <div className="main p-4 shadow-sm">
-              <h2 className="course-title fs-5">Spring Boot - Web Back End</h2>
+              <h2 className="course-title fs-5">{course.name}</h2>
 
               <hr />
 
@@ -34,15 +69,15 @@ function CourseDetail() {
                 <div className="supporter-info">
                   <p>
                     <b>Tư vấn viên :</b>
-                    Phạm Thị Mẫn
+                     {user.name}
                   </p>
                   <p>
                     <b>Email :</b>
-                    manpham@gmail.com
+                    {user.email}
                   </p>
                   <p>
                     <b>Số điện thoại :</b>
-                    0987654321
+                     {user.phone}
                   </p>
                 </div>
               </div>
@@ -75,11 +110,11 @@ function CourseDetail() {
               </div>
               <p>
                 Học phí :
-                <span className="fw-bold course-price">3.000.000 VND</span>
+                <span className="fw-bold course-price">{course.price} VND</span>
               </p>
               <p>
                 Hình thức học :
-                <span className="fw-bold course-type">Phòng Lab</span>
+                <span className="fw-bold course-type">Phòng {course.type}</span>
               </p>
               <button className="btn btn-success">Thêm vào giỏ hàng</button>
             </div>

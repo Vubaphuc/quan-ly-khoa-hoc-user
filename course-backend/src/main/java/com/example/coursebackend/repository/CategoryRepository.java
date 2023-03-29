@@ -9,4 +9,6 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("select ct from Category ct where ct.id in (?1,?2,?3)")
     List<Category> findCategoriesById(Integer id1, Integer id2, Integer id3);
+
+
 }
