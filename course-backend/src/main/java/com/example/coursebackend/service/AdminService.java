@@ -1,15 +1,15 @@
 package com.example.coursebackend.service;
 
 
-import com.example.coursemanagementjpa.dto.PageCourse;
-import com.example.coursemanagementjpa.entity.Category;
-import com.example.coursemanagementjpa.entity.Course;
-import com.example.coursemanagementjpa.entity.User;
-import com.example.coursemanagementjpa.entity.request.UpsertCourseRequest;
-import com.example.coursemanagementjpa.exception.NotFoundException;
-import com.example.coursemanagementjpa.repository.CategoryRepository;
-import com.example.coursemanagementjpa.repository.CourseRepository;
-import com.example.coursemanagementjpa.repository.UserRepository;
+import com.example.coursebackend.dto.PageCourse;
+import com.example.coursebackend.entity.Category;
+import com.example.coursebackend.entity.Course;
+import com.example.coursebackend.entity.User;
+import com.example.coursebackend.entity.request.UpsertCourseRequest;
+import com.example.coursebackend.exception.NotFoundException;
+import com.example.coursebackend.repository.CategoryRepository;
+import com.example.coursebackend.repository.CourseRepository;
+import com.example.coursebackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

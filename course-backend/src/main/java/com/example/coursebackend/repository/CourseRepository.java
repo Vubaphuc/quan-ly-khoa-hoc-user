@@ -1,7 +1,7 @@
 package com.example.coursebackend.repository;
 
-import com.example.coursemanagementjpa.dto.CourseDto;
-import com.example.coursemanagementjpa.entity.Course;
+import com.example.coursebackend.dto.CourseDto;
+import com.example.coursebackend.entity.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

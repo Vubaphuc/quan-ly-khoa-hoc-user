@@ -1,6 +1,6 @@
 package com.example.coursebackend.dto;
 
-import com.example.coursemanagementjpa.entity.User;
+import com.example.coursebackend.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 

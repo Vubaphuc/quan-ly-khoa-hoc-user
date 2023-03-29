@@ -1,10 +1,10 @@
 package com.example.coursebackend.service;
 
 
-import com.example.coursemanagementjpa.dto.CourseDto;
-import com.example.coursemanagementjpa.entity.Course;
-import com.example.coursemanagementjpa.exception.NotFoundException;
-import com.example.coursemanagementjpa.repository.CourseRepository;
+import com.example.coursebackend.dto.CourseDto;
+import com.example.coursebackend.entity.Course;
+import com.example.coursebackend.exception.NotFoundException;
+import com.example.coursebackend.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

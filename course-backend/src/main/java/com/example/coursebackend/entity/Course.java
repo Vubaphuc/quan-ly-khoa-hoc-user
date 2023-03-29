@@ -1,6 +1,6 @@
 package com.example.coursebackend.entity;
 
-import com.example.coursemanagementjpa.dto.CourseDto;
+import com.example.coursebackend.dto.CourseDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

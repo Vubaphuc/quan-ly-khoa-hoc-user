@@ -1,6 +1,6 @@
 package com.example.coursebackend.dto;
 
-import com.example.coursemanagementjpa.entity.Course;
+import com.example.coursebackend.entity.Course;
 import lombok.*;
 
 import java.util.List;

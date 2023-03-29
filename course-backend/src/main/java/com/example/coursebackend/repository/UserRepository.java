@@ -1,6 +1,6 @@
 package com.example.coursebackend.repository;
 
-import com.example.coursemanagementjpa.entity.User;
+import com.example.coursebackend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

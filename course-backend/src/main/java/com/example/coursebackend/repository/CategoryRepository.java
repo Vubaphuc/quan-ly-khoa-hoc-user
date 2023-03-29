@@ -1,6 +1,6 @@
 package com.example.coursebackend.repository;
 
-import com.example.coursemanagementjpa.entity.Category;
+import com.example.coursebackend.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
