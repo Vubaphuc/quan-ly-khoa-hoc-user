@@ -75,7 +75,7 @@ public class Course implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonIgnore // Nếu không muốn trả về thông tin cho client
+//    @JsonIgnore // Nếu không muốn trả về thông tin cho client
     @ManyToMany
     @JoinTable(name = "course_categories",
             joinColumns = @JoinColumn(name = "course_id"),

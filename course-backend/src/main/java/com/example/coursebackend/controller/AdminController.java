@@ -18,10 +18,20 @@ public class AdminController {
 
 
     //1. Xem danh sách khóa học (có phân trang)
-    @GetMapping("courses")
-    public ResponseEntity<?> findAllCoursePage(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize) {
-        return ResponseEntity.ok(adminService.findAllCoursePage(page,pageSize));
+//    @GetMapping("courses")
+//    public ResponseEntity<?> findAllCoursePage(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize) {
+//        return ResponseEntity.ok(adminService.findAllCoursePage(page,pageSize));
+//    }
+    @GetMapping("users")
+    public ResponseEntity<?> findAllUser () {
+        return ResponseEntity.ok(adminService.findAllUser());
     }
+
+    @GetMapping("courses")
+    public ResponseEntity<?> findAllCourse () {
+        return ResponseEntity.ok(adminService.findAllCourse());
+    }
+
 
     //2. Tạo khóa học mới
     @PostMapping("courses")

@@ -53,14 +53,14 @@ public class AdminService {
         });
 
         // lấy ra category
-        List<Category> categoryList = getCategory(request.getTopics());
+//        List<Category> categoryList = getCategory(request.getTopics());
 
         // tạo mới course
         Course course = Course.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .type(request.getType())
-                .categories(categoryList)
+                .categories(request.getTopics())
                 .thumbnail(request.getThumbnail())
                 .user(user)
                 .build();
@@ -94,13 +94,13 @@ public class AdminService {
 
 
         // lấy ra list Category
-        List<Category> categoryList = getCategory(request.getTopics());
+//        List<Category> categoryList = getCategory(request.getTopics());
 
         // set lại dữ liệu
         course.setName(request.getName());
         course.setDescription(request.getDescription());
         course.setType(request.getType());
-        course.setCategories(categoryList);
+        course.setCategories(request.getTopics());
         course.setThumbnail(request.getThumbnail());
         course.setUser(user);
 
@@ -138,5 +138,14 @@ public class AdminService {
 
         return rdCategories;
 
+    }
+
+    public List<Course> findAllCourse() {
+        return courseRepository.findAll();
+    }
+
+    public List<User> findAllUser() {
+
+        return userRepository.findAll();
     }
 }
