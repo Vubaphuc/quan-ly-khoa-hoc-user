@@ -71,6 +71,8 @@ public class Course implements Serializable {
     @Column(name = "rating")
     private Double rating;
 
+
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -81,5 +83,7 @@ public class Course implements Serializable {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "categories_id"))
     private List<Category> categories = new ArrayList<>();
+
+
 
 }

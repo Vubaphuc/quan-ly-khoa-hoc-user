@@ -1,91 +1,46 @@
-import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  useCreateCourseMutation,
-  useGetAllUserQuery,
-} from "../../app/service/couresService";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
 import Select from "react-select";
+import useFetchQuery from "./hooks/useFetchQuery";
+import useCreate from "./hooks/useCreate";
+import {
+  getCategoryOptions,
+  getTypeOptions,
+  getUserOptions,
+} from "./options/options";
+import { Controller } from "react-hook-form";
 
 function CourseCreate() {
+  const { categories, users, isLoading } = useFetchQuery();
+  const { control, register, handleSubmit, errors, onCreateCourse } =
+    useCreate();
+  const categoryOptions = getCategoryOptions(categories);
+  const userOptions = getUserOptions(users);
+  const typeOptions = getTypeOptions();
 
-
-  const [selectTopics, setSelectTopics] = useState([]);
-
-  const [addCourse, addCourseResult] = useCreateCourseMutation();
-
-  const [optionsUser, setOptionsUser] = useState([]);
-  const { data, isLoading, isError, error } = useGetAllUserQuery();
-
-
-useEffect (() => {
-    if (data) {
-        let newOptionsUser = data.map((d) => ({
-            value: d.id, label: d.name,
-        }));
-        setOptionsUser(newOptionsUser);
-        
-    }
-}, [data])
-
-  const options = [
-    { value: "Backend", label: "Backend" },
-    { value: "Frontend", label: "Frontend" },
-    { value: "Mobile", label: "Mobile" },
-    { value: "Lập Trình Wed", label: "Lập Trình Wed" },
-    { value: "Database", label: "Database" },
-    { value: "Devops", label: "Devops" },
-  ];
-
-  const schema = yup.object().shape({
-    name: yup.string().required("tên khóa học không được để trống"),
-    description: yup.string().required("Mô tả không được để trống"),
-    type: yup.string().required("Hình thức học không được để trống"),
-    topics: yup.array().min(1, "chọn ít nhất 1 chủ đề"),
-    userId: yup.string().required("Chọn tư vấn viên"),
-  });
-
-  const { register, handleSubmit, formState: { errors } } = useForm ({
-    resolver: yupResolver(schema),
-  });
-
-
-  const onSubmit = data => {
-    console.log(data)
-    addCourse(data);
-  };
-
- 
-
-
-
-
+  if (isLoading) {
+    return <h2>Loading ...</h2>;
+  }
 
   return (
     <div className="course-list mt-4 mb-4">
       <div className="container">
-        <div className="mb-4">
-          <button 
-            className="btn-custom btn-create-course" 
-            type="submit"
-          >
-            <span>
-              <i className="fa-solid fa-plus"></i>
-            </span>
-            Tạo
-          </button>
-          <Link to={"/admin/khoa-hoc"} className="btn-custom btn-refresh">
-            <span>
-              <i className="fa-solid fa-angle-left"></i>
-            </span>
-            Quay lại
-          </Link>
-        </div>
+        <form onSubmit={handleSubmit(onCreateCourse)}>
+          <div className="mb-4">
+            <button type="submit" className="btn-custom btn-create-course me-2">
+              <span>
+                <i className="fa-solid fa-plus"></i>
+              </span>
+              Tạo
+            </button>
+            <Link to={"/admin/khoa-hoc"} className="btn-custom btn-refresh">
+              <span>
+                <i className="fa-solid fa-angle-left"></i>
+              </span>
+              Quay lại
+            </Link>
+          </div>
 
-        <div className="course-list-inner p-2">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="course-list-inner p-2">
             <div className="row">
               <div className="col-md-8">
                 <div className="mb-3">
@@ -96,10 +51,11 @@ useEffect (() => {
                     type="text"
                     className="form-control"
                     id="course-name"
-                    {...register('name')}
-                    
+                    {...register("name")}
                   />
-                  <p className="text-danger">{errors.name?.message}</p>
+                  <p className="text-danger fst-italic mt-2">
+                    {errors.name?.message}
+                  </p>
                 </div>
                 <div className="mb-3">
                   <label
@@ -114,56 +70,99 @@ useEffect (() => {
                     rows="10"
                     {...register("description")}
                   ></textarea>
-                  <p className="text-danger">{errors.description?.message}</p>
+                  <p className="text-danger fst-italic mt-2">
+                    {errors.description?.message}
+                  </p>
                 </div>
               </div>
               <div className="col-md-4">
                 <div className="mb-3">
+                  <label htmlFor="course-price" className="form-label fw-bold">
+                    Giá
+                  </label>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="course-price"
+                    {...register("price")}
+                    onClick={(e) => {
+                      if (e.target.value === "0") {
+                        e.target.value = ""
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (e.target.value === "") {
+                        e.target.value = "0"
+                      }
+                    }}
+                  />
+                  <p className="text-danger fst-italic mt-2">
+                    {errors.price?.message}
+                  </p>
+                </div>
+                <div className="mb-3">
                   <label htmlFor="course-type" className="form-label fw-bold">
                     Hình thức học
                   </label>
-                  <select
-                    className="form-control"
-                    id="course-type"
+                  <Controller
                     name="type"
-                    {...register("type")}
-                  >
-                    <option hidden>- Chọn hình thức học</option>
-                    <option value="online">Online</option>
-                    <option value="onlab">Onlab</option>
-                  </select>
+                    control={control}
+                    defaultValue={typeOptions[0]}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        placeholder="Chọn hình thức học"
+                        options={typeOptions}
+                        value={typeOptions.find((c) => c.value === field.value)}
+                        onChange={(val) => field.onChange(val.value)}
+                      />
+                    )}
+                  />
                 </div>
-                <p className="text-danger">{errors.type?.message}</p>
                 <div className="mb-3">
                   <label htmlFor="course-topic" className="form-label fw-bold">
                     Chủ đề
                   </label>
-
-                  <Select
-                  id="topics"
-                    placeholder="Chọn chủ đề"
-                    isMulti
-                    options={options}
-                    {...register("topics")}
+                  <Controller
+                    name="topics"
+                    control={control}
+                    defaultValue={categoryOptions[0]}
+                    render={({ field: { onChange, value, ref } }) => (
+                      <Select
+                        placeholder="-- Chọn danh mục --"
+                        inputRef={ref}
+                        value={categoryOptions.find((c) => c.value === value)}
+                        onChange={(val) => onChange(val.map((c) => c.value))}
+                        options={categoryOptions}
+                        isMulti
+                      />
+                    )}
                   />
-                  <p className="text-danger">{errors.topics?.message}</p>
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="course-supporter" className="form-label fw-bold">
-                    Tư vấn viên
+                  <label htmlFor="course-topic" className="form-label fw-bold">
+                    Nhân viên tư vấn
                   </label>
-                  <Select
-                  id="userId"
-                    placeholder="chọn tư vấn viên"
-                    options={optionsUser}
-                    {...register("userId")}
+                  <Controller
+                    name="userId"
+                    control={control}
+                    defaultValue={userOptions[0]}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        placeholder="Chọn nhân viên tư vấn"
+                        options={userOptions}
+                        value={userOptions.find((c) => c.value === field.value)}
+                        onChange={(val) => field.onChange(val.value)}
+                      />
+                    )}
                   />
-                  {errors.userId && <span>{errors.userId.message}</span>}
                 </div>
               </div>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   );

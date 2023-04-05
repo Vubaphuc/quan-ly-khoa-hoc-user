@@ -16,7 +16,7 @@ public class UpsertCourseRequest {
     private String name;
     private String description;
     private String type;
-    private List<Category> topics;
-    private String thumbnail;
-    private Integer userId;
+    private List<Integer> topics;
+    private Integer price;
+    private int userId;
 }

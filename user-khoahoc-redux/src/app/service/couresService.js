@@ -13,12 +13,8 @@ export const courseApi = createApi({
       query: () => "courses",
       providesTags: ["Course"]
     }),
-    getAllUser: builder.query({
-        // "courses" là phần nối với A
-      query: () => "users",
-    }),
     getCourseById: builder.query ({
-        query: (id) => `courses/${id}`
+        query: (id) => `courses/${id}`,
     }),
     createCourse: builder.mutation ({
         // phần query này chỉ chấp nhập 1 tham số truyền vào. nếu truyền tham số 2 cái trở nên những tham số khác sẽ undifile.
@@ -57,6 +53,13 @@ export const courseApi = createApi({
         }),
         invalidatesTags: ["Course"]
     }),
+    updateAvatar: builder.mutation ({
+        query: ({id, ...data}) => ({
+            url: `files/${id}`,
+            method: "PUT",
+            body: data,
+        }),
+    }),
   }),
 })
 
@@ -68,6 +71,6 @@ export const {
     useCreateCourseMutation, 
     useUpdateCourseMutation, 
     useDeleteCourseMutation,
-    useGetAllUserQuery,
+    useUpdateAvatarMutation,
     // trả ra bằng tên method đặt các method API 
 } = courseApi;
