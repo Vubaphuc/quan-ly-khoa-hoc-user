@@ -18,5 +18,4 @@ public class UpdateCourseRequest {
     private String type;
     private List<Integer> topics;
     private int userId;
-    private MultipartFile thumbnail;
 }

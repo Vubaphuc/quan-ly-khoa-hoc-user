@@ -13,6 +13,10 @@ export const courseApi = createApi({
       query: () => "courses",
       providesTags: ["Course"]
     }),
+    getAllCoursePage: builder.query({
+        query: (page) => `courses-page?page=${page}`,
+        providesTags: ["Course"]
+    }),
     getCourseById: builder.query ({
         query: (id) => `courses/${id}`,
     }),
@@ -26,7 +30,7 @@ export const courseApi = createApi({
     }),
     updateCourse: builder.mutation ({
         // đây là cách tách id ra khỏi data.
-        query: (id,...data) => ({
+        query: ({id,...data}) => ({
                        url: `courses/${id}`,
                        method: "PUT",
                        body: data,
@@ -52,7 +56,8 @@ export const courseApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const { 
-    useGetAllCourseQuery, 
+    useGetAllCourseQuery,
+    useGetAllCoursePageQuery,
     useGetCourseByIdQuery, 
     useCreateCourseMutation, 
     useUpdateCourseMutation, 

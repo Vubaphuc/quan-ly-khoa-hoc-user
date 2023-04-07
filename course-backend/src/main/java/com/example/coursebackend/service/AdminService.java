@@ -106,8 +106,8 @@ public class AdminService {
         // lấy ra list Category
         List<Category> categoryList = getCategory(request.getTopics());
 
-        // lấy địa chỉ url của thumbnail
-        FileResponse fileResponse = readFileAvatar(request.getThumbnail());
+
+
 
 
 
@@ -117,7 +117,7 @@ public class AdminService {
         course.setType(request.getType());
         course.setCategories(categoryList);
         course.setUser(user);
-        course.setThumbnail(fileResponse.getUrl());
+
 
         // lưu vào csdl
         courseRepository.save(course);
@@ -170,7 +170,7 @@ public class AdminService {
 
 
 
-    public Image readFile(MultipartFile file, Integer id) {
+    public FileResponse readFile(MultipartFile file, Integer id) {
 
         validataFile(file);
         try {
@@ -182,9 +182,11 @@ public class AdminService {
                     .data(file.getBytes())
                     .build();
             imageRepository.save(image);
-            FileResponse fileResponse = new FileResponse("api/v1/admin/files" +  image.getId());
+            FileResponse fileResponse = new FileResponse("http://localhost:8080/api/v1/admin/files/" +  image.getId());
+
+
             course.setThumbnail(fileResponse.getUrl());
-            return readFile(image.getId());
+            return fileResponse;
         } catch (IOException e) {
             throw new RuntimeException("Có lỗi xảy ra");
         }
@@ -202,7 +204,7 @@ public class AdminService {
             imageRepository.save(image);
 
 
-            FileResponse fileResponse = new FileResponse("api/v1/admin/files" +  image.getId());
+            FileResponse fileResponse = new FileResponse("http://localhost:8080/api/v1/admin/files/" +  image.getId());
 
             return fileResponse;
 

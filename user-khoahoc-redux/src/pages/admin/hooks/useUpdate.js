@@ -20,13 +20,16 @@ function useUpdate(courseId) {
         mode: 'all',
     });
 
-
     const onSubmit = (data) => {
-        updateCourse({ courseId,...data })
+        const newData = {...data, id: courseId};
+        updateCourse({courseId,...newData})
         .unwrap()
         .then(() => alert("Cập nhật thành công"))
         .catch(err => alert(err.data.message))
-      };
+    };
+
+
+
 
 
     return {

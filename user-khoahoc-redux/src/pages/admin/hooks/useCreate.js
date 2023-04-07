@@ -2,9 +2,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { courseSchema } from "../schemas/schemas";
 import { useCreateCourseMutation } from "../../../app/service/couresService";
+import { useNavigate } from "react-router-dom";
 
 const useCreate = () => {
     const [addCourse, addCourseResult] = useCreateCourseMutation();
+    const navigate = useNavigate();
 
     const {
         control,
@@ -21,8 +23,10 @@ const useCreate = () => {
 
       // Function tạo khóa học
       const onCreateCourse = (data) => {
-        console.log(data);
-        addCourse(data);
+        addCourse(data)
+        .unwrap()
+        .then(() => navigate("/admin/khoa-hoc"))
+        .catch(err => alert(err.data.message))
     };
 
   return {

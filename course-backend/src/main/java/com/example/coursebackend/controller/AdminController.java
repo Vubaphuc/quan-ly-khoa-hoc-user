@@ -5,6 +5,7 @@ package com.example.coursebackend.controller;
 import com.example.coursebackend.entity.Image;
 import com.example.coursebackend.entity.request.UpdateCourseRequest;
 import com.example.coursebackend.entity.request.UpsertCourseRequest;
+import com.example.coursebackend.entity.response.FileResponse;
 import com.example.coursebackend.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,10 @@ public class AdminController {
 
 
     //1. Xem danh sách khóa học (có phân trang)
-//    @GetMapping("courses")
-//    public ResponseEntity<?> findAllCoursePage(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize) {
-//        return ResponseEntity.ok(adminService.findAllCoursePage(page,pageSize));
-//    }
+    @GetMapping("courses-page")
+    public ResponseEntity<?> findAllCoursePage(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize) {
+        return ResponseEntity.ok(adminService.findAllCoursePage(page,pageSize));
+    }
 
     @GetMapping("categorys")
     public ResponseEntity<?> findAllCategorys () {
@@ -71,14 +72,14 @@ public class AdminController {
         adminService.deleteCourseById(id);
     }
 
-//    @PutMapping("files/{id}")
-//    public ResponseEntity<?> updateCourseThumbnail(@ModelAttribute("file") MultipartFile file,
-//                                                   @PathVariable Integer id) {
-//        Image image = adminService.readFile(file,id);
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.parseMediaType(image.getType()))
-//                .body(image.getData());
-//    }
+
+
+    @PutMapping("files/{id}")
+    public ResponseEntity<?> updateCourseThumbnail(@ModelAttribute("file") MultipartFile file,
+                                                   @PathVariable Integer id) {
+        FileResponse fileResponse = adminService.readFile(file,id);
+        return ResponseEntity.ok(fileResponse.getUrl());
+    }
 
 
 

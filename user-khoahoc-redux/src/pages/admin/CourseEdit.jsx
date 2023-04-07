@@ -13,9 +13,9 @@ import useFetchQuery from "./hooks/useFetchQuery";
 import Select from "react-select";
 import { Controller } from "react-hook-form";
 import useUpdate from "./hooks/useUpdate";
+import axios from "axios";
 
 function CourseEdit() {
-
   const { courseId } = useParams();
 
   const {
@@ -28,7 +28,8 @@ function CourseEdit() {
     useUpdate(courseId);
 
   const navigate = useNavigate();
-  const [previewImage, setPreviewImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [imageURL, setImageURL] = useState("");
 
   const [deleteCourse] = useDeleteCourseMutation();
 
@@ -57,6 +58,12 @@ function CourseEdit() {
       })
       .catch((err) => alert("có lỗi"));
   };
+
+
+
+
+
+
 
   const categoryDefault = getCategoryOptions(dataCourses.categories);
 
@@ -92,7 +99,7 @@ function CourseEdit() {
             </div>
           </div>
 
-          <div className="course-list-inner p-2">
+          <div className="course-list-inner p-2" key={dataCourses.id}>
             <div className="row">
               <div className="col-md-8">
                 <div className="mb-3">
@@ -196,43 +203,31 @@ function CourseEdit() {
                       />
                     )}
                   />
-                </div>
-                <Controller
-                  name="thumbnail"
-                  control={control}
-                  defaultValue={null}
-                  render={({ field: { onChange } }) => (
-                    <div className="mb-3">
-                      <label className="form-label fw-bold">Thumbnail</label>
-                      <div className="course-logo-preview mb-3 rounded">
-                        <img
-                          id="course-logo-preview"
-                          className="rounded"
-                          alt="Course Thumbnail"
-                          src={
-                            previewImage || dataCourses?.thumbnail
-                          }
-                        />
-                      </div>
-                      <label
-                        htmlFor="course-logo-input"
-                        className="btn btn-warning"
-                      >
-                        Đổi ảnh{" "}
-                      </label>
-                      <input
-                        type="file"
-                        id="course-logo-input"
-                        className="d-none"
-                        onChange={(event) => {
-                          const file = event.target.files[0];
-                          setPreviewImage(URL.createObjectURL(file));
-                          onChange(file);
-                        }}
+
+                  <div className="mb-3">
+                    <label className="form-label fw-bold">Thumnail</label>
+                    <div className="course-logo-preview mb-3 rounded">
+                      <img
+                        id="course-logo-preview"
+                        className="rounded"
+                        src={imageURL || dataCourses?.thumbnail}
+                        alt="Course Thumbnail"
                       />
                     </div>
-                  )}
-                />
+
+                    <label
+                      htmlFor="course-logo-input"
+                      className="btn btn-warning"
+                    >
+                      Đổi ảnh
+                    </label>
+                    <input
+                      type="file"
+                      id="course-logo-input"
+                      className="d-none"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
