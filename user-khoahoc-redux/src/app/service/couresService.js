@@ -24,27 +24,13 @@ export const courseApi = createApi({
             body: data,
         })
     }),
-    /*
-        {
-            id: 1,
-            title: khóa học,
-            description: "",
-            price: 100000
-        } => 
-        id : 1 ,
-        {
-            title: khóa học,
-            description: "",
-            price: 100000
-        }
-    */
     updateCourse: builder.mutation ({
         // đây là cách tách id ra khỏi data.
-        query: ({id, ...data}) => ({
-            url: "courses",
-            method: "PUT",
-            body: data,
-        })
+        query: (id,...data) => ({
+                       url: `courses/${id}`,
+                       method: "PUT",
+                       body: {...data},
+                   }),
     }),
     deleteCourse: builder.mutation ({
         query: (id) => ({

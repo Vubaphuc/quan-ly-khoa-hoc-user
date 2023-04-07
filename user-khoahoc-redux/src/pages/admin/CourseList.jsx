@@ -9,7 +9,10 @@ function CourseList() {
 
     const [deleteCourse] = useDeleteCourseMutation();
 
-    console.log(data)
+    if (!data) {
+        return <h2>Loading....</h2>;
+    }
+    
 
     if (isLoading) {
         return <h2>Loading....</h2>;

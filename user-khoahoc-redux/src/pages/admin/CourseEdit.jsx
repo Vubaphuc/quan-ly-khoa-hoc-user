@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   useDeleteCourseMutation,
   useGetCourseByIdQuery,
-  useUpdateAvatarMutation,
 } from "../../app/service/couresService";
 import {
   getCategoryOptions,
@@ -13,17 +11,25 @@ import {
 } from "./options/options";
 import useFetchQuery from "./hooks/useFetchQuery";
 import Select from "react-select";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { courseSchema } from "./schemas/schemas";
+import { Controller } from "react-hook-form";
+import useUpdate from "./hooks/useUpdate";
 
 function CourseEdit() {
-  const { courseId } = useParams();
-  const navigate = useNavigate();
-  const [imageFile, setImageFile] = useState(null);
-  const [imageURL, setImageURL] = useState("");
 
-  const { data, isError, error, isLoading } = useGetCourseByIdQuery(courseId);
+  const { courseId } = useParams();
+
+  const {
+    data: dataCourses,
+    isLoading: isLoadingCourse,
+    isError: isErrorCourse,
+  } = useGetCourseByIdQuery(courseId);
+
+  const { control, register, handleSubmit, errors, onSubmit } =
+    useUpdate(courseId);
+
+  const navigate = useNavigate();
+  const [previewImage, setPreviewImage] = useState(null);
+
   const [deleteCourse] = useDeleteCourseMutation();
 
   const { users, categories } = useFetchQuery();
@@ -31,15 +37,16 @@ function CourseEdit() {
   const categoryOptions = getCategoryOptions(categories);
   const typeOptions = getTypeOptions();
 
-  console.log(data, isLoading);
-  if (isLoading) {
-    return <h2>Loading....</h2>;
+  if (isLoadingCourse) {
+    return <h2>Loading ...</h2>;
   }
-  if (isError) {
+
+  if (isErrorCourse) {
     return <h2>Error : {error}</h2>;
   }
-  if (!data) {
-    return <div>không có thông tin nào</div>;
+
+  if (!dataCourses) {
+    return <h2>Loading...</h2>;
   }
 
   const handlerDelete = (id) => {
@@ -48,29 +55,15 @@ function CourseEdit() {
       .then(() => {
         navigate("/admin/khoa-hoc");
       })
-      .catch((err) => alert(err));
+      .catch((err) => alert("có lỗi"));
   };
 
-
-  const handlerUploadAvatar = async (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      setImageFile(file);
-      setImageURL(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
-
-
-
+  const categoryDefault = getCategoryOptions(dataCourses.categories);
 
   return (
     <div className="course-list mt-4 mb-4">
       <div className="container">
-        <form action="">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4 d-flex justify-content-between">
             <div>
               <button className="btn-custom btn-update-course" type="submit">
@@ -89,7 +82,7 @@ function CourseEdit() {
             <div>
               <button
                 className="btn-custom btn-delete-course bg-danger"
-                onClick={() => handlerDelete(data.id)}
+                onClick={() => handlerDelete(dataCourses.id)}
               >
                 <span>
                   <i className="fa-solid fa-trash-can"></i>
@@ -110,8 +103,12 @@ function CourseEdit() {
                     type="text"
                     className="form-control"
                     id="course-name"
-                    value={data.name}
+                    defaultValue={dataCourses?.name}
+                    {...register("name")}
                   />
+                  <p className="text-danger fst-italic mt-2">
+                    {errors.name?.message}
+                  </p>
                 </div>
                 <div className="mb-3">
                   <label
@@ -124,9 +121,12 @@ function CourseEdit() {
                     className="form-control"
                     id="course-description"
                     rows="10"
-                    readOnly
-                    value={data.description}
+                    defaultValue={dataCourses?.description}
+                    {...register("description")}
                   ></textarea>
+                  <p className="text-danger fst-italic mt-2">
+                    {errors.description?.message}
+                  </p>
                 </div>
               </div>
               <div className="col-md-4">
@@ -134,26 +134,42 @@ function CourseEdit() {
                   <label htmlFor="course-type" className="form-label fw-bold">
                     Hình thức học
                   </label>
-                  <Select
-                    readOnly
-                    defaultValue={{ label: data.type, value: data.type }}
-                    options={typeOptions}
-                    isDisabled
-                    onChange={(e) => e.target.value}
+                  <Controller
+                    name="type"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        defaultValue={{
+                          label: dataCourses.type,
+                          value: dataCourses.type,
+                        }}
+                        options={typeOptions}
+                        value={typeOptions.find((c) => c.value === field.value)}
+                        onChange={(val) => field.onChange(val.value)}
+                      />
+                    )}
                   />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="course-topic" className="form-label fw-bold">
                     Chủ đề
                   </label>
-                  <Select
-                    isMulti
-                    defaultValue={data.categories.map((categorie) => ({
-                      label: categorie.name,
-                      value: categorie.id,
-                    }))}
-                    options={categoryOptions}
-                    isDisabled
+                  <Controller
+                    name="topics"
+                    control={control}
+                    defaultValue={dataCourses.categories.map((e) => e.id)}
+                    render={({ field: { onChange, value, ref } }) => (
+                      <Select
+                        closeMenuOnSelect={false}
+                        defaultValue={categoryDefault}
+                        options={categoryOptions}
+                        inputRef={ref}
+                        value={categoryOptions.find((c) => c.value === value)}
+                        onChange={(val) => onChange(val.map((c) => c.value))}
+                        isMulti
+                      />
+                    )}
                   />
                 </div>
                 <div className="mb-3">
@@ -163,42 +179,60 @@ function CourseEdit() {
                   >
                     Tư vấn viên
                   </label>
-                  <Select
-                    readOnly
-                    defaultValue={{
-                      label: data.user.name,
-                      value: data.user.id,
-                    }}
-                    options={userOptions}
-                    isDisabled
-                    onChange={(e) => e.target.value}
+                  <Controller
+                    name="userId"
+                    control={control}
+                    defaultValue={dataCourses.user.id}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        defaultValue={{
+                          label: dataCourses.user.name,
+                          value: dataCourses.user.id,
+                        }}
+                        options={userOptions}
+                        value={userOptions.find((c) => c.value === field.value)}
+                        onChange={(val) => field.onChange(val.value)}
+                      />
+                    )}
                   />
                 </div>
-
-                <div className="mb-3">
-                  <label className="form-label fw-bold">Thumnail</label>
-                  <div className="course-logo-preview mb-3 rounded">
-                    <img
-                      id="course-logo-preview"
-                      className="rounded"
-                      src={imageURL || data.thumbnail}
-                      alt="Course Thumbnail"
-                    />
-                  </div>
-
-                  <label
-                    htmlFor="course-logo-input"
-                    className="btn btn-warning"
-                  >
-                    Đổi ảnh{" "}
-                  </label>
-                  <input
-                    type="file"
-                    id="course-logo-input"
-                    className="d-none"
-                    onChange={handlerUploadAvatar}
-                  />
-                </div>
+                <Controller
+                  name="thumbnail"
+                  control={control}
+                  defaultValue={null}
+                  render={({ field: { onChange } }) => (
+                    <div className="mb-3">
+                      <label className="form-label fw-bold">Thumbnail</label>
+                      <div className="course-logo-preview mb-3 rounded">
+                        <img
+                          id="course-logo-preview"
+                          className="rounded"
+                          alt="Course Thumbnail"
+                          src={
+                            previewImage || dataCourses?.thumbnail
+                          }
+                        />
+                      </div>
+                      <label
+                        htmlFor="course-logo-input"
+                        className="btn btn-warning"
+                      >
+                        Đổi ảnh{" "}
+                      </label>
+                      <input
+                        type="file"
+                        id="course-logo-input"
+                        className="d-none"
+                        onChange={(event) => {
+                          const file = event.target.files[0];
+                          setPreviewImage(URL.createObjectURL(file));
+                          onChange(file);
+                        }}
+                      />
+                    </div>
+                  )}
+                />
               </div>
             </div>
           </div>

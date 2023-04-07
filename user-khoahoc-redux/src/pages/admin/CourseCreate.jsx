@@ -9,7 +9,10 @@ import {
 } from "./options/options";
 import { Controller } from "react-hook-form";
 
+
+
 function CourseCreate() {
+  
   const { categories, users, isLoading } = useFetchQuery();
   const { control, register, handleSubmit, errors, onCreateCourse } =
     useCreate();

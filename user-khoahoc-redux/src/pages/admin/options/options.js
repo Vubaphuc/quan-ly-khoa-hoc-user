@@ -24,7 +24,7 @@ export const getUserOptions = (users) => {
 
 export const getTypeOptions = () => {
     return [
-        { label: "Phòng Lab", value: "onlab" },
-        { label: "Trực tuyến", value: "online" },
+        { label: "onlab", value: "onlab" },
+        { label: "online", value: "online" },
     ];
 }

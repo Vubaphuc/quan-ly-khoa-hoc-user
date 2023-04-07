@@ -6,6 +6,7 @@ import com.example.coursebackend.entity.Category;
 import com.example.coursebackend.entity.Course;
 import com.example.coursebackend.entity.Image;
 import com.example.coursebackend.entity.User;
+import com.example.coursebackend.entity.request.UpdateCourseRequest;
 import com.example.coursebackend.entity.request.UpsertCourseRequest;
 import com.example.coursebackend.entity.response.FileResponse;
 import com.example.coursebackend.exception.BadRequestException;
@@ -90,7 +91,7 @@ public class AdminService {
     }
 
     //4. Cập nhật thông tin khóa học
-    public Course updateCourseById(Integer id, UpsertCourseRequest request) {
+    public Course updateCourseById(Integer id, UpdateCourseRequest request) {
 
         // lấy ra course
         Course course = courseRepository.findCoursesById(id).orElseThrow(() -> {
@@ -105,6 +106,9 @@ public class AdminService {
         // lấy ra list Category
         List<Category> categoryList = getCategory(request.getTopics());
 
+        // lấy địa chỉ url của thumbnail
+        FileResponse fileResponse = readFileAvatar(request.getThumbnail());
+
 
 
         // set lại dữ liệu
@@ -112,8 +116,8 @@ public class AdminService {
         course.setDescription(request.getDescription());
         course.setType(request.getType());
         course.setCategories(categoryList);
-        course.setPrice(request.getPrice());
         course.setUser(user);
+        course.setThumbnail(fileResponse.getUrl());
 
         // lưu vào csdl
         courseRepository.save(course);
@@ -164,6 +168,8 @@ public class AdminService {
         return categoryRepository.findAll();
     }
 
+
+
     public Image readFile(MultipartFile file, Integer id) {
 
         validataFile(file);
@@ -182,6 +188,29 @@ public class AdminService {
         } catch (IOException e) {
             throw new RuntimeException("Có lỗi xảy ra");
         }
+    }
+
+    private FileResponse readFileAvatar (MultipartFile file) {
+        validataFile(file);
+        try {
+            Image image = Image.builder()
+                    .type(file.getContentType())
+                    .data(file.getBytes())
+                    .build();
+
+
+            imageRepository.save(image);
+
+
+            FileResponse fileResponse = new FileResponse("api/v1/admin/files" +  image.getId());
+
+            return fileResponse;
+
+
+        } catch (IOException e) {
+            throw new RuntimeException("Có lỗi xảy ra");
+        }
+
     }
 
 
