@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { courseSchema } from "../schemas/schemas";
 
 
-function useUpdate( {courseId} ) {
+function useUpdate(courseId) {
 
     
 
@@ -22,7 +22,7 @@ function useUpdate( {courseId} ) {
 
 
     const onSubmit = (data) => {
-        updateCourse({ courseId, ...data })
+        updateCourse({ courseId,...data })
         .unwrap()
         .then(() => alert("Cập nhật thành công"))
         .catch(err => alert(err.data.message))

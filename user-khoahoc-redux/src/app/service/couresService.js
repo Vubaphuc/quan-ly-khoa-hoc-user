@@ -29,7 +29,7 @@ export const courseApi = createApi({
         query: (id,...data) => ({
                        url: `courses/${id}`,
                        method: "PUT",
-                       body: {...data},
+                       body: data,
                    }),
     }),
     deleteCourse: builder.mutation ({
